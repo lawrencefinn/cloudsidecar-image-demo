@@ -1,5 +1,6 @@
 from PIL import Image
 import boto3
+import botocore
 import os
 import tempfile
 import time
@@ -17,19 +18,23 @@ def main():
     s3 = boto3.client('s3', endpoint_url='http://localhost:3450')
     queue_url = "https://sqs.us-east-1.amazonaws.com/049920107807/queue-l-f-z"
     while True:
-        response = sqs.receive_message(
-            QueueUrl=queue_url,
-            AttributeNames=[
-                'SentTimestamp'
-            ],
-            MaxNumberOfMessages=1,
-            MessageAttributeNames=[
-                'All'
-            ],
-            VisibilityTimeout=30,
-            WaitTimeSeconds=5
-        )
-        
+        try:
+            response = sqs.receive_message(
+                QueueUrl=queue_url,
+                AttributeNames=[
+                    'SentTimestamp'
+                ],
+                MaxNumberOfMessages=1,
+                MessageAttributeNames=[
+                    'All'
+                ],
+                VisibilityTimeout=30,
+                WaitTimeSeconds=5
+            )
+        except botocore.exceptions.EndpointConnectionError as e:
+            print("Exception receiving {}".format(e))
+            continue
+
         print(response)
         if 'Messages' not in response:
             continue
