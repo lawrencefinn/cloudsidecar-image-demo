@@ -1,10 +1,8 @@
 package modules
 
-import awscala._
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.regions.Regions
-import com.amazonaws.services.s3.{AmazonS3ClientBuilder, S3ClientOptions}
-import s3._
+import com.amazonaws.services.s3.{AmazonS3ClientBuilder}
 import javax.inject.Singleton
 
 @Singleton
